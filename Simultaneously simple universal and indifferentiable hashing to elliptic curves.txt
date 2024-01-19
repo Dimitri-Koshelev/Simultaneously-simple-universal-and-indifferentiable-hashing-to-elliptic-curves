@@ -1,0 +1,165 @@
+// The map chi: A2 -> T
+F<w> := CyclotomicField(3);
+sm3 := 2*w + 1;
+F<a,b> := FunctionField(F, 2);
+//a := 0;
+//F<b> := FunctionField(F);
+
+A4<x1,x2,x3,y> := AffineSpace(F, 4);
+f1 := x1^3 + a*x1 + b;
+f2 := x2^3 + a*x2 + b;
+f3 := x3^3 + a*x3 + b;
+T := Scheme(A4, y^2 - f1*f2*f3);
+
+A3<x,y,t> := AffineSpace(F, 3);
+h := 3*t^2 + 4*a;
+f := t^3 + a*t + b;
+S := Surface(A3, y^2 + h*x^2 + f);
+
+s := (y - t*x)/(2*x);
+r := t + 4*x^2;
+fr := r^3 + a*r + b;
+g := t^2 + t*s + s^2 + a;
+phi := map<S -> T | [s, -t - s, r, fr*g/(2*x)]>;
+
+A2<t1,t2> := AffinePlane(F);
+fy := (t1^2 - 4*a)/(2*t1);
+ft := (t1^2 + 4*a)/(-2*sm3*t1);
+fy^2 + 3*ft^2 + 4*a eq 0;
+y0 := fy;
+fft := ft^3 + a*ft + b;
+gx := (t2^2 + fft)/(-2*y0*t2);
+gy := (t2^2 - fft)/(2*t2);
+
+nPl := t1^6 + 2^3*3*sm3*b*t1^3 + 2^6*a^3 + 2^3*3*sm3*t1^3*t2^2;
+nMin := t1^6 + 2^3*3*sm3*b*t1^3 + 2^6*a^3 - 2^3*3*sm3*t1^3*t2^2;
+dx := -2^3*3*sm3*(t1^2 - 2^2*a)*t1^2*t2;
+dy := -2^4*3*sm3*t1^3*t2;
+gx eq nPl/dx;
+gy eq nMin/dy;
+psi := map<A2 -> S | [gx,gy,ft]>;
+
+n1 := t1^8 + 2^2*w^2*a*t1^6 + 2^3*3*sm3*b*t1^5 + 2^5*3*sm3*w^2*a*b*t1^3
+    + 2^6*a^3*t1^2 + 2^8*w^2*a^4 + 2^3*3*sm3*(w^2*t1^2 + 2^2*a)*t1^3*t2^2;
+n2 := t1^8 + 2^2*w*a*t1^6 + 2^3*3*sm3*b*t1^5 + 2^5*3*sm3*w*a*b*t1^3
+    + 2^6*a^3*t1^2 + 2^8*w*a^4 + 2^3*3*sm3*(w*t1^2 + 2^2*a)*t1^3*t2^2;
+n3 := t1^12 + 2^4*3*sm3*b*t1^9 + 2^6*(2*a^3 - 3^3*b^2)*t1^6 + 2^10*3*sm3*a^3*b*t1^3 
+    + 2^12*a^6 - 2^3*3*sm3*(t1^6 - 2^2*3*a*t1^4 - 2^4*3*sm3*b*t1^3 
+    - 2^4*3*a^2*t1^2 + 2^6*a^3 - 2^3*3*sm3*t1^3*t2^2)*t1^3*t2^2;
+
+d1 := -2*sm3*w*(t1^6 + 2^3*3*sm3*b*t1^3 + 2^6*a^3 + 2^3*3*sm3*t1^3*t2^2)*t1;
+d2 := w*d1;
+d3 := -2^4*3^3*(t1^2 - 2^2*a)^2*t1^4*t2^2;
+X1 := n1/d1;
+X2 := n2/d2;
+X3 := n3/d3;
+
+chi := psi*phi; 
+pr := map<T -> A3 | [x1,x2,x3]>;
+chi*pr eq map<A2 -> A3 | [X1,X2,X3]>;
+
+
+////////////////////////////////////////////////////////////
+
+
+printf"\nThe case a = 0\n";
+gx eq (-gy + t2)/(sm3*ft);
+gy eq (ft^3 + b - t2^2)/(-2*t2);
+ft eq t1/(-2*sm3);
+
+_, psiInv := IsInvertible(psi);
+psiInv eq map<S -> A2 | [-2*sm3*t, sm3*x*t + y]>;
+
+n1frak := (t1^3 + 2^3*3*sm3*b + 2^3*3*sm3*w^2*t2^2)*t1;
+n2frak := (t1^3 + 2^3*3*sm3*b + 2^3*3*sm3*w*t2^2)*t1;
+n3frak := t1^6 + 2^4*3*sm3*b*t1^3 - 2^6*3^3*b^2
+    - 2^3*3*sm3*(t1^3 - 2^4*3*sm3*b - 2^3*3*sm3*t2^2)*t2^2;
+
+d1frak := -2*sm3*w*(t1^3 + 2^3*3*sm3*b + 2^3*3*sm3*t2^2);
+d2frak := w*d1frak;
+d3frak := -2^4*3^3*t1^2*t2^2;
+
+n1 eq n1frak*t1^4;
+n2 eq n2frak*t1^4;
+n3 eq n3frak*t1^6;
+d1 eq d1frak*t1^4;
+d2 eq d2frak*t1^4;
+d3 eq d3frak*t1^6;
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+// Computations during the proof of Theorem 2
+F<w> := CyclotomicField(3);
+sm3 := 2*w + 1;
+F<a,b,x> := FunctionField(F, 3);
+f := x^3 + a*x + b;
+DE := -16*(4*a^3 + 27*b^2);
+A2<t1,t2> := AffinePlane(F);
+
+n1 := t1^8 + 2^2*w^2*a*t1^6 + 2^3*3*sm3*b*t1^5 + 2^5*3*sm3*w^2*a*b*t1^3
+    + 2^6*a^3*t1^2 + 2^8*w^2*a^4 + 2^3*3*sm3*(w^2*t1^2 + 2^2*a)*t1^3*t2^2;
+n2 := t1^8 + 2^2*w*a*t1^6 + 2^3*3*sm3*b*t1^5 + 2^5*3*sm3*w*a*b*t1^3
+    + 2^6*a^3*t1^2 + 2^8*w*a^4 + 2^3*3*sm3*(w*t1^2 + 2^2*a)*t1^3*t2^2;
+n3 := t1^12 + 2^4*3*sm3*b*t1^9 + 2^6*(2*a^3 - 3^3*b^2)*t1^6 + 2^10*3*sm3*a^3*b*t1^3 
+    + 2^12*a^6 - 2^3*3*sm3*(t1^6 - 2^2*3*a*t1^4 - 2^4*3*sm3*b*t1^3 
+    - 2^4*3*a^2*t1^2 + 2^6*a^3 - 2^3*3*sm3*t1^3*t2^2)*t1^3*t2^2;
+
+d1 := -2*sm3*w*(t1^6 + 2^3*3*sm3*b*t1^3 + 2^6*a^3 + 2^3*3*sm3*t1^3*t2^2)*t1;
+d2 := w*d1;
+d3 := -2^4*3^3*(t1^2 - 2^2*a)^2*t1^4*t2^2;
+
+C1x := Curve(A2, n1 - x*d1);
+C2x := Curve(A2, n2 - x*d2);
+C3x := Curve(A2, n3 - x*d3);
+Cinf := Curve(A2, d1 div t1);
+Cinf eq Curve(A2, d2 div t1);
+
+p0 := t1^6 + 2^3*3*sm3*b*t1^3 + 2^6*a^3;
+q1 := t1^2 + 2*sm3*w^2*x*t1 + 2^2*w*a;
+q2 := t1^2 + 2*sm3*w*x*t1 + 2^2*w^2*a;
+q3 := t1^2 + 2*sm3*x*t1 + 2^2*a;
+
+Hx := Curve(A2, t2^2 - 2*sm3*p0*q1*q2*t1);
+sig1x := map<C1x -> Hx | [t1, 2^2*3*w*q1*t1^2*t2]>;
+sig2x := map<C2x -> Hx | [t1, 2^2*3*w^2*q2*t1^2*t2]>;
+sig1xInv := map<Hx -> C1x | [t1, t2/(2^2*3*w*q1*t1^2)]>;
+sig2xInv := map<Hx -> C2x | [t1, t2/(2^2*3*w^2*q2*t1^2)]>;
+
+up0 := UnivariatePolynomial(p0);
+uq1 := UnivariatePolynomial(q1);
+uq2 := UnivariatePolynomial(q2);
+Discriminant(up0) eq 2^18*3^6*a^6*DE^3;
+Resultant(up0,uq1) eq -2^12*3^3*a^3*f^2;
+Resultant(up0,uq2) eq -2^12*3^3*a^3*f^2;
+Resultant(uq1,uq2) eq -2^4*3*a*(a + 3*x^2);
+
+Hinf := Curve(A2, t2^2 - 2*sm3*p0*t1);
+sigInf := map<Cinf -> Hinf | [t1, -2^2*3*t1^2*t2]>;
+sigInfInv := map<Hinf -> Cinf | [t1, t2/(-2^2*3*t1^2)]>;
+
+pPl := t1^6 + 2*3*sm3*x*t1^5 - 2^2*3*a*t1^4 - 2^4*3*sm3*(a*x + b)*t1^3 -
+    2^4*3*a^2*t1^2 + 2^5*3*sm3*a^2*x*t1 + 2^6*a^3;
+pMin := t1^6 - 2*3*sm3*x*t1^5 + 2^2*3*a*t1^4 + 2^4*3*sm3*(a*x + 2*b)*t1^3 +
+    2^4*3*a^2*t1^2 - 2^5*3*sm3*a^2*x*t1 + 2^6*a^3;
+
+c0 := p0^2;
+c1 := 2*sm3*pPl*t1;
+c2 := -2^2*3*t1^2;
+C3xPr := Curve(A2, c0 + c1*t2^2 + c2*t2^4);
+sig3x := map<C3x -> C3xPr | [t1, 2*sm3*t1*t2]>;
+sig3xInv := map<C3xPr -> C3x | [t1, t2/(2*sm3*t1)]>;
+
+h3x := q3*pMin;
+c1^2 - 4*c0*c2 eq 2^2*3^2*(t1^2 - 2^2*a)^2*t1^2 * h3x;
+uq3 := UnivariatePolynomial(q3);
+upMin := UnivariatePolynomial(pMin);
+Discriminant(upMin) eq 2^38*3^12*a^6 * (a*x + b)^2 * f^2 * DE;
+Resultant(uq3, upMin) eq -2^16*3^3*a^3*f^2;
